@@ -1,33 +1,76 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import Cards from 'react-credit-cards-2'
+
+import Form from './components/form'
+import { CreditCardData } from './types';
+
+import 'react-credit-cards-2/dist/es/styles-compiled.css';
+
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const [data, setData] = useState<CreditCardData>({
+    name: '',
+    number: '',
+    cvc: '',
+    expiry: '',
+  })
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setData({
+      ...data,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    alert("Cartão Cadastrado com Sucesso !!");
+    setData({
+      name: '',
+      number: '',
+      cvc: '',
+      expiry: '',
+    });
+  };
+
+  const validateForm = () => {
+    const isCVCVAlid = data.cvc.length === 3;
+
+    const regex = /[a-z]+/i;
+    const isNameValid = regex.test(data.name);
+
+    return isCVCVAlid && isNameValid;
+  }
+
+  const isFormValid = validateForm();
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <main>
+        <div>
+          <h2>Bem Vindo {data.name} </h2>
+          <h2>Seu novo Cartão</h2>
+        </div>
+
+
+        <section>
+          <Form
+            data={data}
+            handleInputChange={handleChange}
+            handleSubmitForm={handleSubmit}
+            isFormValid={isFormValid}
+          />
+
+          <Cards
+            name={data.name}
+            number={data.number}
+            cvc={data.cvc}
+            expiry={data.expiry}
+          />
+        </section>
+
+      </main>
     </>
   )
 }
