@@ -14,7 +14,9 @@ function App() {
     number: '',
     cvc: '',
     expiry: '',
-  })
+  });
+
+  const [savedCards, setSavedCards] = useState<CreditCardData[]>([]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setData({
@@ -25,6 +27,11 @@ function App() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    const newSavedCards = [...savedCards, data];
+    setSavedCards(newSavedCards);
+
+
     alert("Cartão Cadastrado com Sucesso !!");
     setData({
       name: '',
@@ -68,6 +75,26 @@ function App() {
             cvc={data.cvc}
             expiry={data.expiry}
           />
+        </section>
+
+        <section>
+          <div>
+            <h2> Cartões Cadastrados</h2>
+          </div>
+
+          <div>
+            {
+              savedCards.map((card) => (
+                <Cards
+                  key={card.number}
+                  cvc={card.cvc}
+                  expiry={card.expiry}
+                  name={card.name}
+                  number={card.number} />
+              ))
+            }
+          </div>
+
         </section>
 
       </main>
